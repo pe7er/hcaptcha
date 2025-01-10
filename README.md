@@ -31,9 +31,10 @@ has been configured properly and works correctly.
 ## Content-Security-Policy Settings
 If you use CSP headers, please add the following to your configuration:
 ```txt
-script-src should include https://hcaptcha.com https://.hcaptcha.com
+script-src should include https://hcaptcha.com https://*.hcaptcha.com
 frame-src should include https://hcaptcha.com https://*.hcaptcha.com
 style-src should include https://hcaptcha.com https://*.hcaptcha.com
+connect-src should include https://hcaptcha.com https://*.hcaptcha.com
 ```
 
 ## Translations

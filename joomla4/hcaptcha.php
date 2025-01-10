@@ -122,7 +122,7 @@ class PlgCaptchaHcaptcha extends CMSPlugin
         $input = Factory::getApplication()->input;
         $privateKey = $this->params->get('privateKey');
         $remoteIp = IpHelper::getIp();
-        $hCaptchaResponse = $code ?? $input->get('h-captcha-response', '', 'cmd');
+        $hCaptchaResponse = $input->get('h-captcha-response', ($code ?? ''), 'cmd');
 
         // Check for Private Key
         if (empty($privateKey)) {
@@ -156,10 +156,13 @@ class PlgCaptchaHcaptcha extends CMSPlugin
     private function getResponse(string $privateKey, string $remoteIp, string $hCaptchaResponse)
     {
         try {
-            $verifyResponse = HttpFactory::getHttp()->get(
-                'https://hcaptcha.com/siteverify?secret=' . $privateKey .
-                '&response=' . $hCaptchaResponse .
-                '&remoteip=' . $remoteIp
+            $verifyResponse = $verifyResponse = HttpFactory::getHttp()->post(
+                'https://hcaptcha.com/siteverify',
+                http_build_query([
+                    'secret'   => $privateKey,
+                    'response' => $hCaptchaResponse,
+                    'remoteip' => $remoteIp
+                ])
             );
         } catch (RuntimeException $e) {
             throw new \RuntimeException(Text::_('PLG_CAPTCHA_HCAPTCHA_ERROR_CANT_CONNECT_TO_HCAPTCHA_SERVERS'));
